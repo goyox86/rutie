@@ -19,10 +19,12 @@ links = "ruby"
 
 [features]
 no-link = [] # tells build.rs to not link to libruby
+rb-sys = ["dep:rb-sys"]
 
 [dependencies]
 libc = "0.2.121"
 lazy_static = "1.4.0"
+rb-sys = { version = "0.9.64", optional = true }
 
 [badges]
 travis-ci = { repository = "danielpclark/rutie", branch = "master" }
