@@ -18,6 +18,7 @@ build = "build.rs"
 links = "ruby"
 
 [features]
+# default = ["rb-sys"]
 no-link = [] # tells build.rs to not link to libruby
 rb-sys = ["dep:rb-sys"]
 

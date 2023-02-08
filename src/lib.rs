@@ -1,6 +1,5 @@
 #![allow(unused_imports, dead_code)]
-#[macro_use]
-extern crate lazy_static;
+use lazy_static::lazy_static;
 
 mod binding;
 mod class;
@@ -29,6 +28,9 @@ pub use crate::class::traits::{
 pub use crate::helpers::codepoint_iterator::CodepointIterator;
 
 use std::sync::{Arc, RwLock};
+
+#[cfg(feature = "rb-sys")]
+pub mod rbsys;
 
 #[cfg(test)]
 lazy_static! {

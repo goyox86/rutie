@@ -1,6 +1,14 @@
 use crate::AnyObject;
 
+#[cfg(not(feature = "rb-sys"))]
 pub use crate::rubysys::types::{
+    c_char, c_int, c_long, c_void, size_t, st_retval, Argc, CallbackMutPtr, CallbackPtr,
+    EncodingIndex, EncodingType, Id, InternalValue, RbDataType as DataType,
+    RbDataTypeFunction as DataTypeFunction, SignedValue, Value, ValueType, VmPointer,
+};
+
+#[cfg(feature = "rb-sys")]
+pub use crate::rbsys::types::{
     c_char, c_int, c_long, c_void, size_t, st_retval, Argc, CallbackMutPtr, CallbackPtr,
     EncodingIndex, EncodingType, Id, InternalValue, RbDataType as DataType,
     RbDataTypeFunction as DataTypeFunction, SignedValue, Value, ValueType, VmPointer,
