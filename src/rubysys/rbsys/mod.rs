@@ -15,5 +15,5 @@ pub mod types;
 pub mod value;
 pub mod vm;
 
-pub use crate::rbsys::types::Value;
 pub use rb_sys::rb_cObject;
+pub use types::Value;

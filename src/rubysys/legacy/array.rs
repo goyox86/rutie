@@ -1,4 +1,4 @@
-use crate::rubysys::{
+use super::{
     constant::{FL_USER_1, FL_USER_3, FL_USER_4, FL_USHIFT},
     libc::size_t,
     types::{c_long, InternalValue, RBasic, Value},

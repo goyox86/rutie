@@ -1,0 +1,148 @@
+use libc::c_int;
+use libc::c_void;
+
+use crate::binding::symbol;
+use crate::rubysys::class;
+use crate::rubysys::typed_data;
+use crate::typed_data::DataTypeWrapper;
+use crate::types::c_long;
+use crate::types::Callback;
+use crate::types::CallbackPtr;
+use crate::types::Value;
+use crate::util;
+use crate::Object;
+
+pub fn define_class(name: &str, superclass: Value) -> Value {
+    let name = util::str_to_cstring(name);
+
+    unsafe { class::rb_define_class(name.as_ptr(), superclass.into()).into() }
+}
+
+pub fn define_nested_class(outer: Value, name: &str, superclass: Value) -> Value {
+    let name = util::str_to_cstring(name);
+
+    unsafe { class::rb_define_class_under(outer.into(), name.as_ptr(), superclass.into()).into() }
+}
+
+pub fn const_get(klass: Value, name: &str) -> Value {
+    unsafe { class::rb_const_get(klass.into(), symbol::internal_id(name)).into() }
+}
+
+pub fn const_set(klass: Value, name: &str, value: Value) {
+    let name = util::str_to_cstring(name);
+
+    unsafe { class::rb_define_const(klass.into(), name.as_ptr(), value.into()) };
+}
+
+pub fn object_class(object: Value) -> Value {
+    unsafe { class::rb_obj_class(object.into()).into() }
+}
+
+pub fn superclass(klass: Value) -> Value {
+    unsafe { class::rb_class_superclass(klass.into()).into() }
+}
+
+pub fn singleton_class(object: Value) -> Value {
+    unsafe { class::rb_singleton_class(object.into()).into() }
+}
+
+pub fn ancestors(klass: Value) -> Value {
+    unsafe { class::rb_mod_ancestors(klass.into()).into() }
+}
+
+pub fn new_instance(klass: Value, arguments: &[Value]) -> Value {
+    let (argc, argv) = util::process_arguments(arguments);
+
+    unsafe { class::rb_class_new_instance(argc, argv as *const rb_sys::VALUE, klass.into()).into() }
+}
+
+pub fn instance_variable_get(object: Value, name: &str) -> Value {
+    unsafe { class::rb_ivar_get(object.into(), symbol::internal_id(name)).into() }
+}
+
+pub fn instance_variable_set(object: Value, name: &str, value: Value) -> Value {
+    unsafe { class::rb_ivar_set(object.into(), symbol::internal_id(name), value.into()).into() }
+}
+
+pub fn define_attribute(object: Value, name: &str, reader: bool, writer: bool) {
+    let name = util::str_to_cstring(name);
+    let reader = util::bool_to_c_int(reader);
+    let writer = util::bool_to_c_int(writer);
+
+    unsafe { class::rb_define_attr(object.into(), name.as_ptr(), reader, writer) };
+}
+
+pub fn respond_to(object: Value, method: &str) -> bool {
+    let result = unsafe { class::rb_respond_to(object.into(), symbol::internal_id(method)) };
+
+    util::c_int_to_bool(result)
+}
+
+pub fn define_method<I: Object, O: Object>(klass: Value, name: &str, callback: Callback<I, O>) {
+    let name = util::str_to_cstring(name);
+
+    unsafe {
+        let callback = std::mem::transmute::<Callback<I, O>, _>(callback);
+        class::rb_define_method(klass.into(), name.as_ptr(), callback, -1)
+    }
+}
+
+pub fn define_private_method<I: Object, O: Object>(
+    klass: Value,
+    name: &str,
+    callback: Callback<I, O>,
+) {
+    let name = util::str_to_cstring(name);
+
+    unsafe {
+        let callback = std::mem::transmute::<Callback<I, O>, _>(callback);
+        class::rb_define_private_method(klass.into(), name.as_ptr(), callback, -1);
+    }
+}
+
+pub fn define_singleton_method<I: Object, O: Object>(
+    klass: Value,
+    name: &str,
+    callback: Callback<I, O>,
+) {
+    let name = util::str_to_cstring(name);
+
+    unsafe {
+        let callback = std::mem::transmute::<Callback<I, O>, _>(callback);
+        class::rb_define_singleton_method(klass.into(), name.as_ptr(), callback, -1);
+    }
+}
+
+pub fn wrap_data<T>(klass: Value, data: T, wrapper: &dyn DataTypeWrapper<T>) -> Value {
+    let data = Box::into_raw(Box::new(data)) as *mut c_void;
+
+    unsafe {
+        let rb_data_type: rb_sys::rb_data_type_t = wrapper.data_type().into();
+        typed_data::rb_data_typed_object_wrap(klass.into(), data, &rb_data_type as *const _).into()
+    }
+}
+
+pub fn get_data<T>(object: Value, wrapper: &dyn DataTypeWrapper<T>) -> &mut T {
+    unsafe {
+        let rb_data_type: rb_sys::rb_data_type_t = wrapper.data_type().into();
+        let data = typed_data::rb_check_typeddata(object.into(), &rb_data_type as *const _);
+
+        &mut *(data as *mut T)
+    }
+}
+
+pub fn is_frozen(object: Value) -> Value {
+    unsafe { class::rb_obj_frozen_p(object.into()).into() }
+}
+
+pub fn freeze(object: Value) -> Value {
+    unsafe { class::rb_obj_freeze(object.into()).into() }
+}
+
+pub fn is_eql(object1: Value, object2: Value) -> Value {
+    unsafe { class::rb_eql(object1.into(), object2.into()).into() }
+}
+
+pub fn equals(object1: Value, object2: Value) -> Value {
+    unsafe { class::rb_equal(object1.into(), object2.into()).into() }
+}

@@ -1,15 +1,21 @@
-use crate::rbsys::types::{c_char, c_int, Argc, CallbackPtr, Id, Value};
+use super::types::{c_char, c_int, Argc, CallbackPtr, Id, Value};
 
 pub use rb_sys::{
     // VALUE
     // rb_class_new_instance(int argc, const VALUE *argv, VALUE klass)
     rb_class_new_instance,
     // VALUE
+    // rb_class_superclass(VALUE klass)
+    rb_class_superclass,
+    // VALUE
     // rb_const_get(VALUE obj, ID id)
     rb_const_get,
     // void
     // rb_define_attr(VALUE klass, const char *name, int read, int write)
     rb_define_attr,
+    // VALUE
+    // rb_define_class(const char *name, VALUE super)
+    rb_define_class,
     // VALUE
     // rb_define_class_under(VALUE outer, const char *name, VALUE super)
     rb_define_class_under,

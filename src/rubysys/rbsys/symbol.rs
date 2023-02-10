@@ -1,4 +1,4 @@
-use crate::rbsys::types::{c_char, c_long, Id, Value};
+use super::types::{c_char, c_long, Id, Value};
 
 pub use rb_sys::{
     // const char *

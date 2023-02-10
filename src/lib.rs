@@ -17,7 +17,7 @@ pub use crate::class::{
     any_exception::AnyException, any_object::AnyObject, array::Array, binding::Binding,
     boolean::Boolean, class::Class, encoding::Encoding, enumerator::Enumerator, fixnum::Fixnum,
     float::Float, gc::GC, hash::Hash, integer::Integer, module::Module, nil_class::NilClass,
-    rproc::Proc, string::RString, symbol::Symbol, thread::Thread, vm::VM,
+    rproc::Proc, string::RString, symbol::Symbol, vm::VM,
 };
 
 pub use crate::class::traits::{
@@ -28,9 +28,6 @@ pub use crate::class::traits::{
 pub use crate::helpers::codepoint_iterator::CodepointIterator;
 
 use std::sync::{Arc, RwLock};
-
-#[cfg(feature = "rb-sys")]
-pub mod rbsys;
 
 #[cfg(test)]
 lazy_static! {

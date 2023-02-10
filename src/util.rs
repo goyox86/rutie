@@ -108,11 +108,11 @@ pub unsafe fn ptr_to_data<R>(ptr: *mut c_void) -> R {
 }
 
 pub fn is_proc(obj: Value) -> bool {
-    Boolean::from(unsafe { rb_obj_is_proc(obj) }).to_bool()
+    Boolean::from(unsafe { rb_obj_is_proc(obj.into()) }).to_bool()
 }
 
 pub fn is_method(obj: Value) -> bool {
-    Boolean::from(unsafe { rb_obj_is_method(obj) }).to_bool()
+    Boolean::from(unsafe { rb_obj_is_method(obj.into()) }).to_bool()
 }
 
 // Recurses to the deepest ruby object.
@@ -121,7 +121,9 @@ pub fn is_method(obj: Value) -> bool {
 pub fn inmost_rb_object(klass: &str) -> Value {
     let object = unsafe { rb_cObject };
 
-    klass.split("::").fold(object, |acc, x| const_get(acc, x))
+    klass
+        .split("::")
+        .fold(object.into(), |acc, x| const_get(acc, x))
 }
 
 pub mod callback_call {

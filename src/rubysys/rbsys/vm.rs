@@ -1,4 +1,4 @@
-use crate::rbsys::types::{c_char, c_int, c_void, Argc, CallbackPtr, Id, Value, VmPointer};
+use super::types::{c_char, c_int, c_void, Argc, CallbackPtr, Id, Value, VmPointer};
 
 pub use ::rb_sys::{
     // VALUE

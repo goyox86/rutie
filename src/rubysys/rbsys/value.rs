@@ -1,6 +1,6 @@
 use std::{convert::From, mem};
 
-use crate::rbsys::{
+use super::{
     constant,
     types::{InternalValue, RBasic},
 };
@@ -171,5 +171,19 @@ impl From<InternalValue> for Value {
         Value {
             value: internal_value,
         }
+    }
+}
+
+impl From<i32> for Value {
+    fn from(value: i32) -> Self {
+        Value {
+            value: value as InternalValue,
+        }
+    }
+}
+
+impl From<Value> for u64 {
+    fn from(value: Value) -> Self {
+        value.value
     }
 }

@@ -1,0 +1,76 @@
+use super::types::{c_char, c_int, c_void, size_t, Value};
+
+pub use rb_sys::{
+    // void *
+    // rb_check_typeddata(VALUE obj, const rb_data_type_t *data_type)
+    rb_check_typeddata,
+    // VALUE
+    // rb_data_typed_object_wrap(VALUE klass, void *datap, const rb_data_type_t *type)
+    rb_data_typed_object_wrap,
+    // int
+    // rb_typeddata_inherited_p(const rb_data_type_t *child, const rb_data_type_t *parent)
+    rb_typeddata_inherited_p,
+    // int
+    // rb_typeddata_is_kind_of(VALUE obj, const rb_data_type_t *data_type)
+    rb_typeddata_is_kind_of,
+};
+
+#[repr(C)]
+pub struct RbDataTypeFunction {
+    pub dmark: Option<unsafe extern "C" fn(*mut c_void)>,
+    pub dfree: Option<unsafe extern "C" fn(*mut c_void)>,
+    pub dsize: Option<unsafe extern "C" fn(*const c_void) -> u64>,
+    pub compact: Option<unsafe extern "C" fn(*mut c_void)>,
+    pub reserved: [*mut c_void; 1],
+}
+
+impl Copy for RbDataTypeFunction {}
+impl Clone for RbDataTypeFunction {
+    fn clone(&self) -> Self {
+        Self {
+            dmark: self.dmark,
+            dfree: self.dfree,
+            dsize: self.dsize,
+            compact: self.compact,
+            reserved: self.reserved,
+        }
+    }
+}
+unsafe impl Send for RbDataTypeFunction {}
+unsafe impl Sync for RbDataTypeFunction {}
+
+#[repr(C)]
+pub struct RbDataType {
+    pub wrap_struct_name: *const c_char,
+    pub function: RbDataTypeFunction,
+    pub parent: *const RbDataType,
+    pub data: *mut c_void,
+    pub flags: Value,
+}
+
+unsafe impl Send for RbDataType {}
+unsafe impl Sync for RbDataType {}
+
+impl From<RbDataTypeFunction> for rb_sys::bindings::rb_data_type_struct__bindgen_ty_1 {
+    fn from(rb_data_type_fn: RbDataTypeFunction) -> Self {
+        rb_sys::bindings::rb_data_type_struct__bindgen_ty_1 {
+            dmark: rb_data_type_fn.dmark,
+            dfree: rb_data_type_fn.dfree,
+            dsize: rb_data_type_fn.dsize,
+            dcompact: rb_data_type_fn.compact,
+            reserved: rb_data_type_fn.reserved,
+        }
+    }
+}
+
+impl From<&RbDataType> for rb_sys::rb_data_type_struct {
+    fn from(rb_data_type: &RbDataType) -> Self {
+        rb_sys::rb_data_type_struct {
+            wrap_struct_name: rb_data_type.wrap_struct_name,
+            function: rb_data_type.function.into(),
+            parent: rb_data_type.parent as *const _,
+            data: rb_data_type.data,
+            flags: rb_data_type.flags.into(),
+        }
+    }
+}

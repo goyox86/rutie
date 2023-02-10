@@ -1,4 +1,4 @@
-use crate::rbsys::types::{c_int, size_t, ssize_t, CallbackPtr, Value};
+use super::types::{c_int, size_t, ssize_t, CallbackPtr, Value};
 
 pub use rb_sys::{
     // void
@@ -37,6 +37,11 @@ pub use rb_sys::{
     // void
     // rb_gc_unregister_address(VALUE *addr)
     rb_gc_unregister_address,
-    // int
-    // rb_objspace_marked_obj_p,
 };
+
+extern "C" {
+
+    // int
+    // rb_objspace_marked_object_p(VALUE obj)
+    pub fn rb_objspace_marked_object_p(obj: Value) -> c_int;
+}

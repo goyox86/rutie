@@ -1,14 +1,22 @@
-pub mod array;
-pub mod class;
-pub mod encoding;
-pub mod fixnum;
-pub mod float;
-pub mod gc;
-pub mod global;
-pub mod hash;
-pub mod module;
-pub mod rproc;
-pub mod string;
-pub mod symbol;
-pub mod thread;
-pub mod vm;
+#[cfg(not(feature = "rb-sys"))]
+mod legacy;
+
+#[cfg(not(feature = "rb-sys"))]
+pub use legacy::{
+    array, class, encoding, fixnum, float, gc, global, hash, module, rproc, string, symbol, thread,
+    vm,
+};
+
+#[cfg(feature = "rb-sys")]
+mod rbsys;
+
+// #[cfg(feature = "rb-sys")]
+// pub use rbsys::{
+//     array, class, encoding, fixnum, float, gc, global, hash, module, rproc, string, symbol, thread,
+//     vm,
+// };
+
+#[cfg(feature = "rb-sys")]
+pub use rbsys::{
+    array, class, encoding, fixnum, float, gc, global, hash, module, rproc, string, symbol, vm,
+};

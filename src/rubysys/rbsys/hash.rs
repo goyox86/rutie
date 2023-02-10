@@ -1,4 +1,4 @@
-use crate::rbsys::types::{CallbackMutPtr, CallbackPtr, Value};
+use super::types::{CallbackMutPtr, CallbackPtr, Value};
 
 pub use rb_sys::{
     // VALUE

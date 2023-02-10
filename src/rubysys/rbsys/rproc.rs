@@ -1,9 +1,8 @@
-use crate::{
-    rbsys::{
-        constant::UNLIMITED_ARGUMENTS,
-        types::{c_int, Argc, Value},
-    },
-    AnyException, Exception,
+use crate::{AnyException, Exception};
+
+use super::{
+    constant::UNLIMITED_ARGUMENTS,
+    types::{c_int, Argc, Value},
 };
 
 pub use rb_sys::{

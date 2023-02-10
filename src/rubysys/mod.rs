@@ -1,24 +1,33 @@
 extern crate libc;
 
-pub mod array;
-pub mod class;
-pub mod constant;
-pub mod encoding;
-pub mod fixnum;
-pub mod float;
-pub mod gc;
-pub mod hash;
-pub mod rproc;
-pub mod string;
-pub mod symbol;
-pub mod thread;
-pub mod typed_data;
-pub mod types;
-pub mod value;
-pub mod vm;
+#[cfg(not(feature = "rb-sys"))]
+mod legacy;
 
-use crate::rubysys::types::Value;
+#[cfg(not(feature = "rb-sys"))]
+pub use legacy::{
+    array, class, constant, encoding, fixnum, float, gc, hash, rproc, string, symbol, thread,
+    typed_data, types, value, vm,
+};
 
+#[cfg(not(feature = "rb-sys"))]
+use legacy::types::Value;
+
+#[cfg(not(feature = "rb-sys"))]
 extern "C" {
     pub static rb_cObject: Value;
 }
+
+#[cfg(feature = "rb-sys")]
+mod rbsys;
+
+#[cfg(feature = "rb-sys")]
+pub use rbsys::{
+    array, class, constant, encoding, fixnum, float, gc, hash, rproc, string, symbol, thread,
+    typed_data, types, value, vm,
+};
+
+#[cfg(feature = "rb-sys")]
+pub use rbsys::types::Value;
+
+#[cfg(feature = "rb-sys")]
+pub use rb_sys::rb_cObject;

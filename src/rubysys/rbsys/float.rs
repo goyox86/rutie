@@ -1,4 +1,4 @@
-use crate::rbsys::types::{c_double, Value};
+use super::types::{c_double, Value};
 
 pub use rb_sys::{
     // VALUE

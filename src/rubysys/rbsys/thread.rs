@@ -1,7 +1,7 @@
-use crate::rbsys::types::{c_int, c_void, CallbackPtr, Value};
+use super::types::{c_int, c_void, CallbackPtr, Value};
 
 #[cfg(unix)]
-use crate::rbsys::types::RawFd;
+use super::types::RawFd;
 
 // rb_thread_call_without_gvl - permit concurrent/parallel execution.
 // rb_thread_call_without_gvl2 - permit concurrent/parallel execution
