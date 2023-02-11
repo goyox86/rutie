@@ -84,7 +84,7 @@ impl Thread {
     /// # Examples
     ///
     /// ```no_run
-    /// use rutie::{Class, Fixnum, Object, Thread};
+    /// use rutie::{class, methods, {Class, Fixnum, Object, Thread}};
     ///
     /// class!(Calculator);
     ///

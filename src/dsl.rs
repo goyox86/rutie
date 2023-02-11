@@ -671,6 +671,81 @@ macro_rules! methods {
 ///
 /// array.length == 3
 /// ```
+#[cfg(not(feature = "rb-sys"))]
+#[macro_export]
+macro_rules! wrappable_struct {
+    (@mark_function_pointer) => {
+        None as Option<extern "C" fn(*mut $crate::types::c_void)>
+    };
+    // Leading comma is the comma between `$static_name: ident` and `mark` in the main macro rule.
+    // Optional comma `$(,)*` is not allowed in the main rule, because it is
+    // followed by `$($tail: tt)*`
+    (@mark_function_pointer , mark($object: ident) $body: block) => {
+        Some(Self::mark as extern "C" fn(*mut $crate::types::c_void))
+    };
+    (@mark_function_definition $struct_name: ty) => {};
+    (@mark_function_definition $struct_name: ty, mark($object: ident) $body: expr) => {
+        pub extern "C" fn mark(data: *mut $crate::types::c_void) {
+            let mut data = unsafe { (data as *mut $struct_name).as_mut() };
+
+            if let Some(ref mut $object) = data {
+                $body
+            }
+        }
+    };
+    ($struct_name: ty, $wrapper: ident, $static_name: ident $($tail: tt)*) => {
+        pub struct $wrapper<T> {
+            data_type: $crate::types::DataType,
+            _marker: ::std::marker::PhantomData<T>,
+        }
+
+        ::lazy_static::lazy_static! {
+            pub static ref $static_name: $wrapper<$struct_name> = $wrapper::new();
+        }
+
+        impl<T> $wrapper<T> {
+            fn new() -> $wrapper<T> {
+                let name = concat!("Rutie/", stringify!($struct_name));
+                let name = $crate::util::str_to_cstring(name);
+                let reserved_bytes: [*mut $crate::types::c_void; 2] = [::std::ptr::null_mut(); 2];
+
+                let dmark = wrappable_struct!(@mark_function_pointer $($tail)*);
+
+                let data_type = $crate::types::DataType {
+                    wrap_struct_name: name.into_raw(),
+                    parent: ::std::ptr::null(),
+                    data: ::std::ptr::null_mut(),
+                    flags: $crate::types::Value::from(0).into(),
+
+                    function: $crate::types::DataTypeFunction {
+                        dmark: dmark,
+                        dfree: Some($crate::typed_data::free::<T>),
+                        dsize: None,
+                        reserved: reserved_bytes,
+                    },
+                };
+
+                $wrapper {
+                    data_type: data_type,
+                    _marker: ::std::marker::PhantomData,
+                }
+            }
+
+            wrappable_struct!(@mark_function_definition $struct_name $($tail)*);
+        }
+
+        unsafe impl<T> Sync for $wrapper<T> {}
+
+        // Set constraint to be able to wrap and get data only for type `T`
+        impl<T> $crate::typed_data::DataTypeWrapper<T> for $wrapper<T> {
+            fn data_type(&self) -> &$crate::types::DataType {
+                &self.data_type
+            }
+        }
+    };
+}
+
+#[cfg(feature = "rb-sys")]
 #[macro_export]
 macro_rules! wrappable_struct {
     (@mark_function_pointer) => {
