@@ -10,5 +10,5 @@ pub mod module;
 pub mod rproc;
 pub mod string;
 pub mod symbol;
-// pub mod thread;
+pub mod thread;
 pub mod vm;

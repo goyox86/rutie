@@ -10,13 +10,8 @@ pub use legacy::{
 #[cfg(feature = "rb-sys")]
 mod rbsys;
 
-// #[cfg(feature = "rb-sys")]
-// pub use rbsys::{
-//     array, class, encoding, fixnum, float, gc, global, hash, module, rproc, string, symbol, thread,
-//     vm,
-// };
-
 #[cfg(feature = "rb-sys")]
 pub use rbsys::{
-    array, class, encoding, fixnum, float, gc, global, hash, module, rproc, string, symbol, vm,
+    array, class, encoding, fixnum, float, gc, global, hash, module, rproc, string, symbol, thread,
+    vm,
 };

@@ -84,8 +84,6 @@ impl Thread {
     /// # Examples
     ///
     /// ```no_run
-    /// #[macro_use] extern crate rutie;
-    ///
     /// use rutie::{Class, Fixnum, Object, Thread};
     ///
     /// class!(Calculator);

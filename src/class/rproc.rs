@@ -128,3 +128,17 @@ impl PartialEq for Proc {
         self.equals(other)
     }
 }
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn test_foo() {
+        use crate::{Object, Proc, VerifiedObject, VM};
+        VM::init();
+
+        let procish = VM::eval("lambda {|a,b| a + b }").unwrap();
+
+        assert!(Proc::is_correct_type(&procish), "not Proc!");
+    }
+}
