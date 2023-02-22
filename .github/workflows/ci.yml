@@ -37,5 +37,4 @@ jobs:
       - name: Run ruby tests
         run: | 
           git submodule update --init
-          cd ../gem
-          rake test
+          cd gem && rake test
