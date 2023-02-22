@@ -36,11 +36,11 @@ jobs:
 
       - name: Example tests (rutie_ruby_example)
         working-directory: examples/rutie_ruby_example
-        run: bundle exec rake test
+        run: bundle && bundle exec rake test
 
       - name: Example tests (rutie_ruby_gvl_example)
         working-directory: examples/rutie_ruby_gvl_example
-        run: bundle exec rake test
+        run: bundle && bundle exec rake test
 
       - name: Example tests (rutie_rust_example)
         working-directory: examples/rutie_rust_example
