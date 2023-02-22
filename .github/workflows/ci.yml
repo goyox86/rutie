@@ -26,12 +26,14 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           rustup-toolchain: ${{ matrix.rust }}
+          cache-version: v2
           bundler-cache: true
           cargo-cache: true
+          cargo-cache-extra-path: |
+            examples/rutie_ruby_example/tmp/
+            examples/rutie_ruby_gvl_example/tmp/
+            examples/rutie_rust_example/tmp/
 
-      # - name: Lint rust
-      #   run: cargo clippy && cargo fmt --check
-      
       - name: Example tests (rutie_ruby_example)
         working-directory: examples/rutie_ruby_example
         run: bundle exec rake test
@@ -46,6 +48,9 @@ jobs:
 
       - name: Run Rust ()doc) tests
         run: cargo test --doc
+
+      # - name: Lint rust
+      #   run: cargo clippy && cargo fmt --check
 
       - name: Run Ruby gem tests
         run: | 
