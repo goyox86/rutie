@@ -46,7 +46,7 @@ jobs:
         working-directory: examples/rutie_rust_example
         run: cargo test
 
-      - name: Run Rust ()doc) tests
+      - name: Run Rust (doc) tests
         run: cargo test --doc
 
       # - name: Lint rust
