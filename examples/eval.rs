@@ -1,5 +1,3 @@
-extern crate rutie;
-
 use rutie::VM;
 use std::{env, process};
 
@@ -12,7 +10,7 @@ fn main() {
             Err(e) => {
                 println!("{}", e);
                 process::exit(1);
-            },
+            }
         }
     } else {
         eprintln!(r#"Usage: eval "puts 'Put ruby code to be evaluated in a string after eval.' ""#);
