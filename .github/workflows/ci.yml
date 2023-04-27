@@ -54,7 +54,7 @@ jobs:
       #   run: cargo clippy && cargo fmt --check
 
       - name: Run Ruby gem tests
-        run: | 
+        run: |
           git submodule update --init
           cd gem && rake test
 

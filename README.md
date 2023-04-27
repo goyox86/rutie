@@ -1,6 +1,7 @@
 ## Rutie
 
-[![Build Status](https://travis-ci.org/danielpclark/rutie.svg?branch=master)](https://travis-ci.org/danielpclark/rutie)
+[![GitHub Actions Status](https://github.com/danielpclark/rutie/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/danielpclark/rutie/actions/workflows/ci.yml)
+[![Ruby 2 Compatible](https://img.shields.io/badge/Supports-Ruby%202-brightgreen)](https://travis-ci.org/danielpclark/rutie)
 [![Maintenance](https://img.shields.io/maintenance/yes/2023.svg)](https://github.com/danielpclark/rutie/commits/master)
 [![GitHub contributors](https://img.shields.io/github/contributors/danielpclark/rutie.svg)](https://github.com/danielpclark/rutie/graphs/contributors)
 [![license](https://img.shields.io/github/license/danielpclark/rutie.svg)](https://github.com/danielpclark/rutie/blob/master/LICENSE)
@@ -344,7 +345,7 @@ The important thing to consider as to **“why doesn't every method guarantee th
 
 I'm not opposed to this project being 100% safe, but that will be a major change and a totally different API with many decisions that need to come into play.  Also since this project doesn't strictly adhere to Rust safety principles, as a crate library would be expected to be, this project will not reach the stable 1.0 release as the idea of stability and safety are hand in hand.
 
-I do like safety guarantees and as much as possible new features and language APIs will be built toward this.  You can see what the design of a safe API would look like by examing the [Enumerator features](https://github.com/danielpclark/rutie/blob/master/src/class/enumerator.rs) that have been implemented in this way (largely wrapping method names with calls to `protect_send`).
+I do like safety guarantees and as much as possible new features and language APIs will be built toward this.  You can see what the design of a safe API would look like by examining the [Enumerator features](https://github.com/danielpclark/rutie/blob/master/src/class/enumerator.rs) that have been implemented in this way (largely wrapping method names with calls to `protect_send`).
 
 ## Troubleshooting
 
@@ -419,6 +420,22 @@ Class::from_existing("Pathname").new_instance(&arguments)
 ## Operating System Requirements
 
 Everything is tested against 64 bit operating systems with 64 bit Ruby & Rust builds.  32 bit isn't currently supported.  
+
+### Ruby 2 Notes
+
+Ruby 2 is supported up through 0.8 of Rutie.  For usage with Ruby 2 you need to install libssl1.1 and point to it when you install.  For example:
+
+```
+wget https://www.openssl.org/source/openssl-1.1.1l.tar.gz
+tar xf openssl-1.1.1l.tar.gz
+cd openssl-1.1.1l
+./config --prefix=/usr/local/openssl-1.1.1l --openssldir=/usr/local/openssl-1.1.1l
+make
+sudo make install
+cd ..
+rvm install ruby-2.7.7 --with-openssl-dir=/usr/local/openssl-1.1.1l
+rvm use 2.7.7
+```
 
 #### Linux & Mac
 
